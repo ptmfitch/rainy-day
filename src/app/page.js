@@ -1,4 +1,4 @@
-import { Button, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { Group, Stack, Text, Title } from "@mantine/core";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MantineCarousel from "./components/MantineCarousel";

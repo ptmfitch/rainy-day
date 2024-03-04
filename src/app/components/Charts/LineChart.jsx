@@ -1,9 +1,11 @@
 'use client';
 import { ReactECharts } from './ReactECharts';
 import { graphic } from 'echarts';
+import { useMantineTheme } from '@mantine/core';
 
 function LineChart(props) {
   const { data, title, series, subtitle } = props;
+  const theme = useMantineTheme();
 
   const chartOptions = {
     title: {
@@ -40,16 +42,22 @@ function LineChart(props) {
             name: title,
             data: data,
             type: 'line',
+            lineStyle: {
+              color: theme.colors.green[8]
+            },
+            itemStyle: {
+              color: theme.colors.green[8]
+            },
             areaStyle: {
               opacity: 0.8,
               color: new graphic.LinearGradient(0, 0, 0, 1, [
                 {
                   offset: 0,
-                  color: 'rgb(55, 162, 255)',
+                  color: theme.colors.green[8],
                 },
                 {
                   offset: 1,
-                  color: 'rgb(116, 21, 219)',
+                  color: theme.colors.green[4],
                 },
               ]),
             },
