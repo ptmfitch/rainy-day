@@ -9,6 +9,7 @@ import Image from "next/image";
 import LeafyButton from "./components/LeafyButton";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
 
 async function uploadFile(file) {
   const data = new FormData()
@@ -20,21 +21,31 @@ async function uploadFile(file) {
   if (!res.ok) throw new Error(await res.text())
 }
 
+const fetcher = (...args) => fetch(...args).then(res => res.json())
+
 export default function Home() {
   const [opened, { open, close }] = useDisclosure(false);
   const [file, setFile] = useState(null);
   const [files, setFiles] = useState([]);
 
+  const { data: spendData, isLoading } = useSWR('/api/spendComparison', fetcher)
+
   const theme = useMantineTheme()
   const router = useRouter();
+
+  {!isLoading && console.log('spendData:', spendData)}
 
   return (
     <main>
 
       <Stack align="flex-start" pt="sm" pb="sm" pl="xl" pr="xl" gap="1rem">
         <Title>Hello, James! 👋</Title>
-        {/*todo plumb in Ralhp endpoint*/}
-        <Text size="xl">💸 Today&apos;s spend: <FontAwesomeIcon icon={faArrowUp}/>5%</Text>
+
+        {isLoading && <Text size="xl">rAInyday is thinking... 🧠</Text>}
+        {!isLoading && <Stack>
+          <Text size="lg">{spendData[0].insight}</Text>
+          <Text size="lg">{spendData[0].detail}</Text>
+        </Stack>}
 
         <MantineCarousel /> 
 

@@ -21,7 +21,7 @@ export async function GET(request) {
       maxTokens: 2500,
     });
     const prompt =
-      `I spent ${JSON.stringify(spendThisMonthResponse)} this month and ${JSON.stringify(spendLastMonthResponse)} last month. Give me 3 insights in the following form [{"title":"Headline","insight":"Humorous insight","detail":"Detailed output including values","category":"name}]. Start the title value with a related emoji followed by the title wording. Don't make any of the one word categories generic. Category must be one dictionary word with absolutely no special characters. \n`;
+      `I spent £${JSON.stringify(spendThisMonthResponse)} this month and £${JSON.stringify(spendLastMonthResponse)} last month. Give me 3 insights in the following form [{"title":"Headline","insight":"Humorous insight","detail":"Detailed output including values","category":"<category>"}]. The format for the title value should be <relevant emoji> <title text>. Don't make any of the one word categories generic. The value for category must be only one word with absolutely no special characters, bad things happen if it's more than one word. \n`;
     const result = await model.invoke(prompt);
     console.log('result:', result);
 
