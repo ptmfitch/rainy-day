@@ -11,7 +11,6 @@ export async function GET(request) {
   try {
     console.log('Fetching stories');
     const [ spendThisMonthResponse, spendLastMonthResponse] = await executeQueries();
-    await client.close();
 
     const model = new ChatOpenAI({
       temperature: 0.9,
@@ -19,10 +18,10 @@ export async function GET(request) {
       azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
       azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
       azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
-      maxTokens: 1000,
+      maxTokens: 2500,
     });
     const prompt =
-      `I spent ${JSON.stringify(spendThisMonthResponse)} this month and ${JSON.stringify(spendLastMonthResponse)} last month. Give me 3 insights in the following form [{"title":"Headline","insight":"Humorous insight","detail":"Detailed output including values","category":"OneWordCategory}].  Don't make any of the one word categories generic. \n`;
+      `I spent £${JSON.stringify(spendThisMonthResponse)} this month and £${JSON.stringify(spendLastMonthResponse)} last month. Give me 3 insights in the following form [{"title":"Headline","insight":"Humorous insight","detail":"Detailed output including values","category":"<category>"}]. The format for the title value should be <relevant emoji> <title text>. Don't make any of the one word categories generic. The value for category must be only one word with absolutely no special characters, bad things happen if it's more than one word. \n`;
     const result = await model.invoke(prompt);
     console.log('result:', result);
 
@@ -31,6 +30,9 @@ export async function GET(request) {
     // Handle the error gracefully
     console.error("Error fetching data:", error.message);
     return NextResponse.json({message: "Internal server error"});
+  } finally {
+    // Close the connection
+    // await client.close();
   }
 }
 
@@ -142,7 +144,9 @@ const executeQueries = async () => {
     // Your additional processing logic here...
   } catch (error) {
     console.error('Error executing queries:', error);
-    await client.close();
     return NextResponse.json({message: "Internal server error"});
+  } finally {
+    // Close the connection
+    // await client.close();
   }
 };

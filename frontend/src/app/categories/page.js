@@ -5,7 +5,7 @@ import PieChart from '../components/Charts/PieChart';
 import { ReactECharts } from '../components/Charts/ReactECharts';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Center, Loader, Group } from '@mantine/core';
+import { Center, Loader, Group, Paper, Stack, Text } from '@mantine/core';
 import LeafyButton from '../components/LeafyButton';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -21,10 +21,10 @@ export default function Categories() {
     '/api/totalPerCategory',
     fetcher
   );
-  const { data: createChartData, isLoading: createChartLoading } = useSWR(
-    '/api/createChart',
-    fetcher
-  );
+  // const { data: createChartData, isLoading: createChartLoading } = useSWR(
+  //   '/api/createChart',
+  //   fetcher
+  // );
 
   const test = {
     title: {
@@ -65,11 +65,20 @@ export default function Categories() {
     ],
   };
 
-  if (lineChartLoading || createChartLoading)
+  // if (lineChartLoading || createChartLoading)
+  if (lineChartLoading)
     return (
-      <Center mt='xl'>
-        <Loader />
-      </Center>
+      <Paper 
+        bg="gray.1"
+        h='50vh' w="100%"
+      >
+        <Center h="100%" w="100%">
+          <Stack align="center">
+            <Loader />
+            <Text>Loading charts...</Text>
+          </Stack>
+        </Center>
+      </Paper>
     );
 
   return (
@@ -81,7 +90,7 @@ export default function Categories() {
         {activeChart === 'pie' && (
           <PieChart title='Spend by Categories' data={pieChartData} />
         )}
-        <ReactECharts option={createChartData} theme='light' />
+        {/* <ReactECharts option={createChartData} theme='light' /> */}
       </div>
       <Group justify='center'>
         <LeafyButton
