@@ -64,15 +64,19 @@ export async function GET(req, res) {
   const txn = await txn_collection.findOne({'_id' : txn_id});
 
   const description = txn['description'];
-  const question = `What is the category for "${description}". If you dont know, give the answer <UNKNOWN> and include the input. Output a raw json document with fields for description, category and reasoning`;
+  const question = `What is the category for "${description}". If you dont know, give the answer <UNKNOWN> and include the input. Output a raw json document with fields for description, category and reasoning. The description usually has the name of a business and the location. The business name is more important than the location`;
 
   const retrievedDocs = await retriever.getRelevantDocuments(description);
 
-  const result_string = await ragChain.invoke({
+  var result_string = await ragChain.invoke({
     question,
     context: retrievedDocs,
   });
-
+  
+  if ( result_string.startsWith("```json") ) {
+    result_string = result_string.slice(7, -3);
+  }
+  console.log(result_string)
   var result = JSON.parse(result_string);
   delete result['description']
   // Update the transaction with the pending category

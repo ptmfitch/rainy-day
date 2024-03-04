@@ -9,6 +9,8 @@
     "seed": "node ./data/seed.mjs",
     "total-savings": "node ./data/total_savings.mjs",
     "savings-history": "node ./data/savings_history.mjs",
+    "transaction_embeddings": "node ./data/create_embeddings.mjs",
+    "create_category_by_description": "node ./data/create_category_by_description.mjs",
     "lint": "next lint"
   },
   "dependencies": {
