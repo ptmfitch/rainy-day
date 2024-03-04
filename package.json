@@ -6,27 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "seed": "node ./data/seed.mjs",
+    "total-savings": "node ./data/total_savings.mjs",
+    "savings-history": "node ./data/savings_history.mjs",
     "lint": "next lint"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@langchain/azure-openai": "^0.0.2",
-    "@langchain/openai": "^0.0.15",
     "@mantine/core": "^7.6.1",
     "@mantine/hooks": "^7.6.1",
-    "dotenv": "^16.4.5",
-    "formidable": "^3.5.1",
-    "fs-extra": "^11.2.0",
     "langchain": "^0.1.25",
     "mongodb": "^6.4.0",
     "next": "14.1.1",
     "pdf-parse": "^1.1.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "swr": "^2.2.5",
+    "unsplash-js": "^7.0.19"
   },
   "devDependencies": {
+    "@types/react": "18.2.61",
     "eslint": "^8",
     "eslint-config-next": "14.1.1"
   }
