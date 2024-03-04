@@ -1,6 +1,6 @@
 import { Button } from "@mantine/core";
 
-export default function LeafyButton({variant, children, iconLeft, iconRight}) {
+export default function LeafyButton({variant, children, iconLeft, iconRight, onClick, disabled}) {
   let color;
   switch (variant) {
     case "primary":
@@ -18,6 +18,8 @@ export default function LeafyButton({variant, children, iconLeft, iconRight}) {
       autoContrast={true}
       leftSection={iconLeft}
       rightSection={iconRight}
+      onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </Button>
