@@ -21,16 +21,16 @@ export default function LeafyAppShell({children}) {
 
   return (
     <AppShell
-      header={{ height: 100 }}
+      header={{ height: 60}}
       navbar={{
         width: "100%",
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
-      padding="md"
     >
       <AppShell.Header
         withBorder={false}
+        bg="gray.0"
       >
         <Group p="sm" justify="space-between">
           <Burger
