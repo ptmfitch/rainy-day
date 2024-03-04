@@ -68,11 +68,15 @@ export async function GET(req, res) {
 
   const retrievedDocs = await retriever.getRelevantDocuments(description);
 
-  const result = await ragChain.invoke({
+  const result_string = await ragChain.invoke({
     question,
     context: retrievedDocs,
   });
 
+  var result = JSON.parse(result_string);
+  delete result['description']
+  // Update the transaction with the pending category
+  await txn_collection.updateOne({'_id' : txn_id}, { '$set' : { 'pending_category' : result}})
   client.close();
   console.log(result);
 
