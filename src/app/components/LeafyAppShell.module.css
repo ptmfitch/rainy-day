@@ -1,0 +1,5 @@
+.h1 {
+  padding-left: var(--mantine-spacing-sm);
+  color: var(--mantine-color-green-7);
+  font-size: var(--mantine-font-size-md);
+}
