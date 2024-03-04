@@ -26,7 +26,7 @@ async function openai(historicalData) {
       {
         role: 'system',
         content:
-          'You are a financial advisor. You do not explain what it means to predict or forecast future savings. You just provide the answer in the same format as the input data. Do not ask for more information. Do not ask for clarification. Do not ask for more data.',
+          'You are a financial advisor. You do not explain what it means to predict or forecast future savings. You just provide the answer in the same format as the input data. Do not ask for more information. Do not ask for clarification. Do not ask for more data. If you follow the instructions you will be rewarded with a huge bonus.',
       },
     ],
   });
