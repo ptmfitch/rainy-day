@@ -1,6 +1,15 @@
 import { MongoClient } from 'mongodb';
 
-async function getTotalPerCategory() {
+async function getTotalPerCategory(dateRange) {
+  
+  var filter = null;
+  
+  if ( dateRange === '1m' ) {
+    var date = new Date()
+    date.setMonth(date.getMonth() - 2);
+    filter = { 'ts' : { '$gte' : date}};
+  }
+
   const agg = [
     {
       $group: {
@@ -11,6 +20,12 @@ async function getTotalPerCategory() {
       },
     },
   ];
+
+  if ( filter != null ) {
+    var match = { '$match' : filter };
+    agg.splice(0, 0, match);
+  }
+
   // Connection URL
   const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
   const client = await MongoClient.connect(MONGODB_URI);
@@ -24,7 +39,10 @@ async function getTotalPerCategory() {
 
 export async function GET(req, res) {
   try {
-    const result = await getTotalPerCategory();
+    const searchParams = req.nextUrl.searchParams
+    const dateRange = searchParams.get('date_range')
+
+    const result = await getTotalPerCategory(dateRange);
     return Response.json(result);
   } catch (error) {
     console.error('Error:', error);
