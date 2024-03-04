@@ -8,11 +8,11 @@ import classes from './LeafyAppShell.module.css';
 import SearchInput from './SearchInput';
 
 const pages = [
-  {name: "Home", href: "/"},
-  {name: "Categories", href: "/categories"},
-  {name: "Transactions", href: "/transactions"},
-  {name: "Weather", href: "/weather"},
-  {name: "Pictures", href: "/pictures"}
+  {name: "🏠 Home", href: "/"},
+  {name: "📊 Categories", href: "/categories"},
+  {name: "💱 Transactions", href: "/transactions"},
+  {name: "🌧️ Weather", href: "/weather"},
+  {name: "📷 Pictures", href: "/pictures"}
 ]
 
 export default function LeafyAppShell({children}) {
@@ -39,7 +39,7 @@ export default function LeafyAppShell({children}) {
             size="sm"
           />
           <SearchInput />
-          <Avatar alt="avatar"/>
+          <Avatar src="avatar.jpg" alt="avatar"/>
         </Group>
       </AppShell.Header>
       
