@@ -1,51 +1,9 @@
 'use client';
 
-import { Carousel, Embla } from '@mantine/carousel';
-import { Container, rem, Paper, Space, Text, Title, Stack, Group, ActionIcon } from '@mantine/core';
-import LeafyButton from './LeafyButton';
-import LeafyBadge from './LeafyBadge';
-import classes from './MantineCarousel.module.css';
+import { Carousel } from '@mantine/carousel';
+import { Container} from '@mantine/core';
 import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-
-function Card({ embla, image, title, category }) {
-  const handleNext = () => embla?.scrollNext();
-  const handlePrev = () => embla?.scrollPrev();
-  return (
-    <Paper
-      justify="space-between"
-      p="xl"
-      radius="md"
-      h="400"
-      style={{ backgroundImage: `url(${image})` }}
-      className={classes.card}
-    >
-      <Stack 
-        h="100%"
-        align='flex-start' 
-        justify="space-between"
-      >
-        <Stack>
-          <LeafyBadge text={category}/>
-          <Title order={3} mt="sm" c="white">
-            {title}
-          </Title>
-        </Stack>
-        <Group w="100%" justify="space-between">
-          <ActionIcon onClick={handlePrev} color="green.7">
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </ActionIcon>
-          <LeafyButton variant="primary">Read more</LeafyButton>
-          <ActionIcon onClick={handleNext} color="green.7">
-            <FontAwesomeIcon icon={faArrowRight} />
-          </ActionIcon>
-        </Group>
-      </Stack>
-      
-    </Paper>
-  );
-}
+import { Card } from './Card';
 
 const data = [
   {
