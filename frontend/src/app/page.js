@@ -1,7 +1,7 @@
 'use client';
 
-import { Button, Group, Stack, Text, Title, Modal, FileInput, useMantineTheme } from "@mantine/core";
-import { faArrowUp, faBank, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Button, Group, Stack, Text, Title, Modal, FileInput, useMantineTheme, Spoiler } from "@mantine/core";
+import { faBank, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MantineCarousel from "./components/MantineCarousel";
 import { useDisclosure } from '@mantine/hooks';
@@ -42,10 +42,10 @@ export default function Home() {
         <Title>Hello, James! 👋</Title>
 
         {isLoading && <Text size="xl">rAInyday is thinking... 🧠</Text>}
-        {!isLoading && <Stack>
+        {Array.isArray(spendData) && <Spoiler maxHeight={120} showLabel="Show more" hideLabel="Hide">
           <Text size="lg">{spendData[0].insight}</Text>
           <Text size="lg">{spendData[0].detail}</Text>
-        </Stack>}
+        </Spoiler>}
 
         <MantineCarousel /> 
 
