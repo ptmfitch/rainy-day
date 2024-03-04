@@ -3,27 +3,15 @@
 import { Carousel } from '@mantine/carousel';
 import { Container} from '@mantine/core';
 import { useState } from 'react';
-import { Card } from './Card';
+import { Card, LoadingCard } from './Card';
+import useSWR from 'swr';
+import React from 'react';
 
-const data = [
-  {
-    image: 'https://images.unsplash.com/photo-1518057111178-44a106bad636?w=900&auto=format&fit=crop&w=400&q=80',
-    title: 'Replace your morning coffee with yoga',
-    category: 'coffee',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1584905066893-7d5c142ba4e1?w=900&auto=format&fit=crop&w=400&q=80',
-    title: 'Have you watched Netflix recently?',
-    category: 'subscriptions',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1615829386703-e2bb66a7cb7d?w=900&auto=format&fit=crop&w=400&q=80',
-    title: 'Explore government funded electric car schemes',
-    category: 'petrol',
-  }
-];
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function MantineCarousel() {
+  const { data: storyData, isLoading } = useSWR('/api/stories', fetcher)
+
   const [embla, setEmbla] = useState(null);
 
   return (
@@ -36,7 +24,8 @@ export default function MantineCarousel() {
         slidesToScroll={1}
         withControls={false}
       >
-        {data.map((item, index) => (
+        {isLoading && <LoadingCard/>}
+        {Array.isArray(storyData) && storyData.map((item, index) => (
           <Carousel.Slide key={index}>
             <Card embla={embla} {...item} />
           </Carousel.Slide>
