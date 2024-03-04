@@ -5,8 +5,9 @@ import PieChart from '../components/Charts/PieChart';
 import { ReactECharts } from '../components/Charts/ReactECharts';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Center, Loader, Group, Paper, Stack, Text } from '@mantine/core';
+import { Center, Loader, Group, Paper, Stack, Space, Text } from '@mantine/core';
 import LeafyButton from '../components/LeafyButton';
+import UnclassifiedTransactionCard from '../components/UnclassifiedTransactionCard';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -25,6 +26,11 @@ export default function Categories() {
   //   '/api/createChart',
   //   fetcher
   // );
+
+  const { data: uncatTxns, isLoading: uncatTxnsLoading } = useSWR(
+    '/api/getUncategorisedTransactions',
+    fetcher
+  )
 
   const test = {
     title: {
@@ -65,49 +71,52 @@ export default function Categories() {
     ],
   };
 
-  // if (lineChartLoading || createChartLoading)
-  if (lineChartLoading)
-    return (
-      <Paper 
-        bg="gray.1"
-        h='50vh' w="100%"
+  return (<Stack gap="lg" align="center">
+    {lineChartLoading && <Paper 
+      bg="gray.1"
+      h='50vh' w="100%"
+    >
+      <Center h="100%" w="100%">
+        <Stack align="center">
+          <Loader />
+          <Text>Loading charts...</Text>
+        </Stack>
+      </Center>
+    </Paper>}
+    {lineChartData && <div style={{ height: '50vh', width: '100%' }}>
+      {activeChart === 'line' && (
+        <LineChart title='Total Spend' data={lineChartData} />
+      )}
+      {activeChart === 'pie' && (
+        <PieChart title='Spend by Categories' data={pieChartData} />
+      )}
+      {/* <ReactECharts option={createChartData} theme='light' /> */}
+    </div>}
+    <Group justify='center'>
+      <LeafyButton
+        variant='primary'
+        onClick={() => setActiveChart('line')}
+        disabled={activeChart === 'line'}
       >
-        <Center h="100%" w="100%">
-          <Stack align="center">
-            <Loader />
-            <Text>Loading charts...</Text>
-          </Stack>
-        </Center>
-      </Paper>
-    );
+        Total Spend
+      </LeafyButton>
+      <LeafyButton
+        variant='primary'
+        onClick={() => setActiveChart('pie')}
+        disabled={activeChart === 'pie'}
+      >
+        Spend by Categories
+      </LeafyButton>
+    </Group>
 
-  return (
-    <>
-      <div style={{ height: '50vh', width: '100%' }}>
-        {activeChart === 'line' && (
-          <LineChart title='Total Spend' data={lineChartData} />
-        )}
-        {activeChart === 'pie' && (
-          <PieChart title='Spend by Categories' data={pieChartData} />
-        )}
-        {/* <ReactECharts option={createChartData} theme='light' /> */}
-      </div>
-      <Group justify='center'>
-        <LeafyButton
-          variant='primary'
-          onClick={() => setActiveChart('line')}
-          disabled={activeChart === 'line'}
-        >
-          Total Spend
-        </LeafyButton>
-        <LeafyButton
-          variant='primary'
-          onClick={() => setActiveChart('pie')}
-          disabled={activeChart === 'pie'}
-        >
-          Spend by Categories
-        </LeafyButton>
-      </Group>
-    </>
-  );
+    <Space h="20" />
+
+    <Text size="xl">
+      Uncategorised Transactions
+    </Text>
+    {uncatTxnsLoading && <Loader />}
+    {Array.isArray(uncatTxns) && uncatTxns.map((txn, index) => 
+      <UnclassifiedTransactionCard key={index} txn={txn}/>
+    )}
+  </Stack>);
 }
