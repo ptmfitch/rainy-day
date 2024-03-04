@@ -20,6 +20,7 @@
     "@mantine/carousel": "^7.6.1",
     "@mantine/core": "^7.6.1",
     "@mantine/hooks": "^7.6.1",
+    "datejs": "^1.0.0-rc3",
     "dotenv": "^16.4.5",
     "echarts": "^5.5.0",
     "embla-carousel-react": "^7.1.0",
