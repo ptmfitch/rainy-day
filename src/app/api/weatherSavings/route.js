@@ -5,12 +5,16 @@ async function getWeatherSavings() {
   const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
   const client = await MongoClient.connect(MONGODB_URI);
   const coll = client.db('rainyday').collection('savings_history');
-  const cursor = coll.find();
+  const cursor = coll.find().sort({ ts: -1 }).limit(30);
   const result = await cursor.toArray();
-  console.log(JSON.stringify(result));
+  console.log(result);
   await client.close();
 
-  return result;
+  const series = result.map((item) => [item.ts, item.savings]);
+
+  console.log(series);
+
+  return series;
 }
 
 export async function GET(req, res) {

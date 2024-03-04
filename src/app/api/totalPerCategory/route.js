@@ -14,7 +14,7 @@ async function getTotalPerCategory() {
   // Connection URL
   const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
   const client = await MongoClient.connect(MONGODB_URI);
-  const coll = client.db('rainyday').collection('transactions_rt');
+  const coll = client.db('rainyday').collection('transactions');
   const cursor = coll.aggregate(agg);
   const result = await cursor.toArray();
   await client.close();

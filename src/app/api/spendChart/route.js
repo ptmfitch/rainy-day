@@ -44,7 +44,7 @@ async function getSpendChart() {
   const coll = client.db('rainyday').collection('transactions');
   const cursor = coll.aggregate(agg);
   const result = await cursor.toArray();
-  console.log(JSON.stringify(result));
+  console.log(result);
 
   const cumulative = result.reduce((acc, cur) => {
     acc.push({
@@ -57,7 +57,7 @@ async function getSpendChart() {
 
   const series = cumulative.map((item) => [item.date, item.amount]);
 
-  console.log(JSON.stringify(series));
+  console.log(series);
 
   await client.close();
 

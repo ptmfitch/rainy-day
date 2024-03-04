@@ -18,7 +18,7 @@ async function getTotalSavings() {
   const coll = client.db('rainyday').collection('savings_history');
   const cursor = coll.aggregate(agg);
   const result = await cursor.toArray();
-  console.log(JSON.stringify(result));
+  console.log(result);
   await client.close();
 
   return result;

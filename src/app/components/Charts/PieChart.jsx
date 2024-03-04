@@ -12,7 +12,6 @@ function PieChart(props) {
     },
     tooltip: {
       trigger: 'item',
-      valueFormatter: currencyFormatter,
     },
     legend: {
       type: 'scroll',
