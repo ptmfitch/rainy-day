@@ -16,6 +16,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@langchain/mongodb": "^0.0.1",
     "@langchain/openai": "^0.0.15",
     "@mantine/carousel": "^7.6.1",
     "@mantine/core": "^7.6.1",
