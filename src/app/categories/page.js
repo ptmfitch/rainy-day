@@ -1,44 +1,25 @@
+'use client';
+
 import LineChart from '../components/Charts/LineChart';
 import PieChart from '../components/Charts/PieChart';
+import { useState } from 'react';
+import useSWR from 'swr';
+import { Loader, Center } from '@mantine/core';
 
-async function getSpendData() {
-  const res = await fetch('http://localhost:3000/api/spendChart', {
-    cache: 'no-store',
-  });
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data');
-  }
+export default function Categories() {
+  const [activeChart, setActiveChart] = useState('line');
 
-  return res.json();
-}
+  const { data: lineChartData, isLoading: lineChartLoading } = useSWR('/api/spendChart', fetcher)
+  const { data: pieChartData, isLoading: pieChartLoading} = useSWR('/api/totalPerCategory', fetcher)
 
-async function getTotalPerCategory() {
-  const res = await fetch('http://localhost:3000/api/totalPerCategory', {
-    cache: 'no-store',
-  });
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
-
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data');
-  }
-
-  return res.json();
-}
-
-export default async function Categories() {
-  const spendData = await getSpendData();
-  const categoryData = await getTotalPerCategory();
-
+  if (lineChartLoading || pieChartLoading) return <Center><Loader /></Center>
+  
   return (
     <div style={{ height: '50vh', width: '100%' }}>
-      <LineChart title='Total Spend' data={spendData} />
-      <PieChart title='Spend by Categories' data={categoryData} />
+      {activeChart === 'line' && <LineChart title='Total Spend' data={lineChartData} />}
+      {activeChart === 'pie' && <PieChart title='Spend by Categories' data={pieChartData} />}
     </div>
   );
 }
