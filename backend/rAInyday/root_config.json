@@ -1,0 +1,5 @@
+{
+    "name": "rAInyday",
+    "provider_region": "aws-eu-west-2",
+    "deployment_model": "LOCAL"
+}

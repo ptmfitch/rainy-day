@@ -1,0 +1,21 @@
+[
+    {
+        "name": "updateForecast",
+        "private": true
+    },
+    {
+        "name": "fetchForecast",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "saveForecast",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "send_next_transaction",
+        "private": false,
+        "disable_arg_logs": true
+    }
+]

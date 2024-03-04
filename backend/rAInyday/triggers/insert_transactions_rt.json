@@ -1,0 +1,16 @@
+{
+    "name": "insert_transactions_rt",
+    "type": "SCHEDULED",
+    "disabled": false,
+    "config": {
+        "schedule": "*/1 * * * *",
+        "skip_catchup_events": false
+    },
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "send_next_transaction"
+            }
+        }
+    }
+}
