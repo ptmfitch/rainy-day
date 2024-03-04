@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { writeFile } from 'fs/promises';
+import { join } from 'path';
 
 export async function POST(req, res) {
   
@@ -12,7 +13,8 @@ export async function POST(req, res) {
         const bytes = await pdfFile.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        const filename = 'documents/' + `${Date.now()}-${pdfFile.name}`;
+        const uniqueFilename = `${Date.now()}-${pdfFile.name}`;
+        const filename = join('src/uploads', uniqueFilename);
         console.log(filename);
 
         await writeFile(filename, buffer);
