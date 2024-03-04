@@ -31,6 +31,11 @@ async function getSpendChart() {
         },
       },
     },
+    {
+      $sort: {
+        _id: 1,
+      },
+    },
   ];
 
   // Connection URL
@@ -50,11 +55,13 @@ async function getSpendChart() {
     return acc;
   }, []);
 
-  console.log(JSON.stringify(cumulative));
+  const series = cumulative.map((item) => [item.date, item.amount]);
+
+  console.log(JSON.stringify(series));
 
   await client.close();
 
-  return cumulative;
+  return series;
 }
 
 export async function GET(req, res) {

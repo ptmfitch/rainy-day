@@ -17,6 +17,7 @@
     "@mantine/core": "^7.6.1",
     "@mantine/hooks": "^7.6.1",
     "dotenv": "^16.4.5",
+    "echarts": "^5.5.0",
     "embla-carousel-react": "^7.1.0",
     "langchain": "^0.1.25",
     "mongodb": "^6.4.0",
