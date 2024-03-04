@@ -18,9 +18,7 @@ export async function GET(req, res) {
   // Connection URL
   const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
   const client = await MongoClient.connect(MONGODB_URI);
-  const collection = client
-    .db('rainyday')
-    .collection('category_by_description');
+  const collection = client.db('rainyday').collection('transactions');
 
   const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
     collection,
@@ -63,7 +61,9 @@ export async function GET(req, res) {
   How much money have I spent on coffee this month on a daily basis?
   `;
 
-  const retrievedDocs = await retriever.getRelevantDocuments(question);
+  const retrievedDocs = await retriever.getRelevantDocuments(question, {
+    limit: 100,
+  });
   console.log('retrievedDocs');
   console.log(retrievedDocs);
 
