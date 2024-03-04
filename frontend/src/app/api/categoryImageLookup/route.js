@@ -1,46 +1,55 @@
-
-import { NextResponse } from "next/server";
-import { createApi } from "unsplash-js";
-import { connectToDb } from "@/utils/mongo";
+import { NextResponse } from 'next/server';
+import { createApi } from 'unsplash-js';
+import { MongoClient } from 'mongodb';
 
 const api = createApi({
-    // Don't forget to set your access token here!
-    // See https://unsplash.com/developers
-    accessKey: process.env.UNSPLASH_API_KEY
+  // Don't forget to set your access token here!
+  // See https://unsplash.com/developers
+  accessKey: process.env.UNSPLASH_API_KEY,
 });
 
-
 export async function GET(request) {
+  const apiKey = process.env.UNSPLASH_API_KEY;
+  const searchParams = request.nextUrl.searchParams;
 
-    const apiKey = process.env.UNSPLASH_API_KEY;
-    const searchParams = request.nextUrl.searchParams
- 
-    const query = searchParams.get('query')
+  const query = searchParams.get('query');
 
-    // Check if the query is in the cache
-    const cachedImage = await getImageFromCache(query);
-    if (cachedImage) {
-        console.log("Found image in cache for query: ", query);
-        return NextResponse.json(cachedImage.image);
-    }
+  // Check if the query is in the cache
+  const cachedImage = await getImageFromCache(query);
+  if (cachedImage) {
+    console.log('Found image in cache for query: ', query);
+    return NextResponse.json(cachedImage.image);
+  }
 
-    const encodedQuery = encodeURIComponent(query);
-    const unsplashURL = `https://api.unsplash.com/photos/random?query=${encodedQuery}&count=1&client_id=${apiKey}`;
-    console.log("Fetching images from Unsplash with query: ", query, " URL: ", unsplashURL);
-    const response = await fetch(unsplashURL);
-    console.log("Unsplash replied with status: ", response.status);
-    // const response = await fetch(`https://api.unsplash.com/photos/random?query=${query}&count=1&client_id=${apiKey}`);
-    if (response.status !== 200) {
-        return new NextResponse('Failed to fetch data from Unsplash with error ' + response.status + ' and message: ' + response.statusText + ' for query: ' + query,{status:response.status});
-    }
-    const data = await response.json();
+  const encodedQuery = encodeURIComponent(query);
+  const unsplashURL = `https://api.unsplash.com/photos/random?query=${encodedQuery}&count=1&client_id=${apiKey}`;
+  console.log(
+    'Fetching images from Unsplash with query: ',
+    query,
+    ' URL: ',
+    unsplashURL
+  );
+  const response = await fetch(unsplashURL);
+  console.log('Unsplash replied with status: ', response.status);
+  // const response = await fetch(`https://api.unsplash.com/photos/random?query=${query}&count=1&client_id=${apiKey}`);
+  if (response.status !== 200) {
+    return new NextResponse(
+      'Failed to fetch data from Unsplash with error ' +
+        response.status +
+        ' and message: ' +
+        response.statusText +
+        ' for query: ' +
+        query,
+      { status: response.status }
+    );
+  }
+  const data = await response.json();
 
-    // Save the image to the cache
-    await saveImageToCache(query, data[0]);
-    
-    // console.log(data[0]);
-    return NextResponse.json(data[0]);
+  // Save the image to the cache
+  await saveImageToCache(query, data[0]);
 
+  // console.log(data[0]);
+  return NextResponse.json(data[0]);
 }
 // Example URL for sending a query
 // https://example.com/api/categoryImageLookup?query=mountains
@@ -145,35 +154,40 @@ export async function GET(request) {
 }
 */
 
-
 function getImageFromCache(query) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const { client } = await connectToDb();
-            const result = await client.db('rainyday')
-                .collection("unsplash_images")
-                .findOne({ query: query });
-            console.log("Found image in cache for query: ", query);
-            resolve(result);
-        } catch (error) {
-            console.error("Error fetching data:", error.message);
-            reject(error);
-        }
-    });
+  return new Promise(async (resolve, reject) => {
+    try {
+      const MONGODB_URI =
+        process.env.MONGODB_URI || 'mongodb://localhost:27017';
+      const client = await MongoClient.connect(MONGODB_URI);
+      const result = await client
+        .db('rainyday')
+        .collection('unsplash_images')
+        .findOne({ query: query });
+      console.log('Found image in cache for query: ', query);
+      resolve(result);
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+      reject(error);
+    }
+  });
 }
 
 function saveImageToCache(query, image) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const { client } = await connectToDb();
-            const result = await client.db('rainyday')
-                .collection("unsplash_images")
-                .insertOne({ query: query, image: image });
-            console.log("Saved image to cache for query: ", query);
-            resolve(result);
-        } catch (error) {
-            console.error("Error fetching data:", error.message);
-            reject(error);
-        }
-    });
+  return new Promise(async (resolve, reject) => {
+    try {
+      const MONGODB_URI =
+        process.env.MONGODB_URI || 'mongodb://localhost:27017';
+      const client = await MongoClient.connect(MONGODB_URI);
+      const result = await client
+        .db('rainyday')
+        .collection('unsplash_images')
+        .insertOne({ query: query, image: image });
+      console.log('Saved image to cache for query: ', query);
+      resolve(result);
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+      reject(error);
+    }
+  });
 }
