@@ -42,21 +42,26 @@ export async function GET(req, res) {
   try {
     const result = await getWeatherSavings();
     let forecast = await openai(result);
-    forecast = JSON.parse(forecast);
 
-    // convert forecast sstring to a date
-    forecast = forecast.map((item) => {
-      return [new Date(item[0]), item[1]];
-    });
+    try {
+      forecast = JSON.parse(forecast);
+      // convert forecast sstring to a date
+      forecast = forecast.map((item) => {
+        return [new Date(item[0]), item[1]];
+      });
 
-    console.log('Forecast');
-    console.log(forecast);
+      console.log('Forecast');
+      console.log(forecast);
 
-    const total = result.concat(forecast);
-    console.log('Total');
-    console.log(JSON.stringify(forecast));
+      const total = result.concat(forecast);
+      console.log('Total');
+      console.log(JSON.stringify(forecast));
 
-    return Response.json(total);
+      return Response.json(total);
+    } catch (error) {
+      console.error('Error:', error);
+      return Response.json(result);
+    }
   } catch (error) {
     console.error('Error:', error);
     return Response.json(
