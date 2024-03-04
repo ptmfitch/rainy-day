@@ -1,4 +1,4 @@
-import { Paper, Stack, Title, Group, ActionIcon, Loader, Center } from "@mantine/core";
+import { Paper, Stack, Title, Group, ActionIcon, Loader, Center, Flex } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LeafyButton from "./LeafyButton";
 import LeafyBadge from "./LeafyBadge";
@@ -31,9 +31,19 @@ export function Card({ embla, title, category, image }) {
       >
         <Stack>
           <LeafyBadge text={category}/>
-          <Title order={3} mt="sm" c="white">
-            {title}
-          </Title>
+          <Flex 
+            style={{ backgroundColor: `rgba(255, 255, 255, .2)`}}
+          >
+            <Title 
+              radius="md"
+                order={3} 
+                mt="sm" 
+                c="white"
+              >
+              {title}
+            </Title>
+          </Flex>
+          
         </Stack>
         <Group w="100%" justify="space-between">
           <ActionIcon onClick={handlePrev} color="green.7">

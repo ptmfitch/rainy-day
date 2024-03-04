@@ -3,10 +3,11 @@ import { writeFile } from 'fs/promises';
 import { join } from 'path';
 
 export async function POST(req, res) {
-  
+    console.log('got here');
     try {
         // Access uploaded file
         const file = await req.formData();
+        console.log(file)
         const pdfFile = file.get('file');
         console.log(pdfFile);
 
