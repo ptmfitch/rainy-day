@@ -27,3 +27,24 @@ resource "mongodbatlas_cluster" "cluster" {
     value = "development"
   }
 }
+
+resource "mongodbatlas_online_archive" "oa" {
+  project_id      = var.project_id
+  cluster_name    = mongodbatlas_cluster.cluster.name
+  coll_name       = "weather_ts"
+  collection_type = "TIMESERIES"
+  db_name         = "rainyday"
+  paused          = false
+
+  criteria {
+    date_field        = "forecastedAt"
+    date_format       = "ISODATE"
+    expire_after_days = 1
+    type              = "DATE"
+  }
+
+  data_expiration_rule {
+    expire_after_days = 365
+  }
+
+}
