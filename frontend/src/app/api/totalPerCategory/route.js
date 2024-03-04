@@ -6,7 +6,7 @@ async function getTotalPerCategory(dateRange) {
   
   if ( dateRange === '1m' ) {
     var date = new Date()
-    date.setMonth(date.getMonth() - 2);
+    date.setMonth(date.getMonth() - 1);
     filter = { 'ts' : { '$gte' : date}};
   }
 
