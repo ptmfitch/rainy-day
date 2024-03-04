@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "seed": "node ./data/seed.mjs",
+    "total-savings": "node ./data/total_savings.mjs",
+    "savings-history": "node ./data/savings_history.mjs",
     "lint": "next lint"
   },
   "dependencies": {
