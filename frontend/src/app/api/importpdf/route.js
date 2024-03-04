@@ -16,14 +16,14 @@ export async function GET(req, res) {
     azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
     azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
     azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
-    maxTokens: 1000,
+    maxTokens: 2000,
   });
   const prompt =
     'Generate a list of JSON objects representing the transactions from the account statement. Add a new field to the JSON called category based on the description, and select one of the following (Subscriptions, General, Bills, Undefined). Please only provide the list of data as your response. \n';
   const result = await model.invoke(prompt + response_raw);
   // const output = JSON.stringify(result.content, null, 2)
   // console.log(output);
-  return NextResponse.json({ messsage: result.content });
+  return NextResponse.json(JSON.parse(result.content));
 }
 
 
