@@ -39,7 +39,7 @@ export default function LeafyAppShell({children}) {
             size="sm"
           />
           <SearchInput />
-          <Avatar alt="avatar"/>
+          <Avatar src="avatar.jpg" alt="avatar"/>
         </Group>
       </AppShell.Header>
       
