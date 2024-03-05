@@ -57,6 +57,24 @@ There is a box on this screen so that you can enter free text to generate your c
 
 * ImageSaver screen. Upload an image and AI will suggest ways of saving money based on the image!
 
+# Database Structure
+
+Collections
+
+* category_by_description - Maps description to categiory - Used as a vector store to aid categorisation
+    - Has a vector search index named vector_index on the description
+* images - created on insert
+* saving_history - created via aggregations
+* statements
+* transactions - created by the seed script. 
+    - Index on ts and category, vector_index on everything, autocomplete index on amount, category and description
+* transactions_rt - created by the seed script. Can be used via app services to insert transactions in 'real time' into the transactions collection
+* trigger_control - used by the above to control whether or not to insert real time transactions
+* unsplash_images - a cache
+* weather_history - created by the seeds script - stores 1yr of historical weather data
+* weather_ts - populated once an hour via app services calling OpenMeteo
+    - Online Archive to archive after 1 day, delete after 1yr
+
 # Roles and Responsibilities
 
 * Peter Fitch - UI
