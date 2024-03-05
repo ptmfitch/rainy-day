@@ -76,11 +76,12 @@ export default function Home() {
         <Text size="xl">📄 AI statement insights</Text> 
         <Group w="100%" justify="flex-start">
           {files.map(file => 
-            <Button key={file} h="100" w="110" radius="xl" color="green.1"
+            <Button 
+              key={file} 
+              h="100" w="110" 
+              radius="xl" 
+              color="green.1"
               onClick={() => {
-                console.log("got here")
-                console.log(file)
-                console.log(nav)
                 router.push(`/transactions/${nav}`)}
               }
             >
