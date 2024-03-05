@@ -25,23 +25,22 @@ export async function POST(req, res) {
 
     console.log(`Saved to ${filename}`);
 
-    try {
-      // upload file to AWS S3
-      const s3 = new AWS.S3({
-        accessKeyId: process.env.S3_KEY,
-        secretAccessKey: process.env.S3_SECRET,
-        sessionToken: process.env.S3_SESSION_TOKEN,
-      });
-      const params = {
-        Bucket: process.env.BUCKET_NAME,
-        Key: pdfFile.name,
-        Body: buffer,
-      };
-      await s3.upload(params).promise();
-      console.log("Uploaded to S3");
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   const s3 = new AWS.S3({
+    //     accessKeyId: process.env.S3_KEY,
+    //     secretAccessKey: process.env.S3_SECRET,
+    //     sessionToken: process.env.S3_SESSION_TOKEN,
+    //   });
+    //   const params = {
+    //     Bucket: process.env.BUCKET_NAME,
+    //     Key: pdfFile.name,
+    //     Body: buffer,
+    //   };
+    //   await s3.upload(params).promise();
+    //   console.log("Uploaded to S3");
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
     try {
       const client = await MongoClient.connect(MONGODB_URI);
