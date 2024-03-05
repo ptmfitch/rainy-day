@@ -32,8 +32,6 @@ export async function POST(req, res) {
         await coll.insertOne({'name':uniqueFilename, 'file':buffer});
         console.log("Inserted into MongoDB");
 
-        await client.close();
-
         const filename = join('/', 'tmp', uniqueFilename);
         console.log(filename);
 
@@ -45,5 +43,7 @@ export async function POST(req, res) {
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal server error' });
+    } finally {
+        await client.close();
     }
 }
