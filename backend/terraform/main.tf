@@ -1,3 +1,14 @@
+resource "aws_s3_bucket" "bucket" {
+  bucket = "rainyday-s3-bucket"
+
+  tags = {
+    Name        = "rainyday-s3-bucket"
+    Environment = "Dev"
+    owner       = "carlos.castro"
+    purpose     = "training"
+    "expire-on" = "2024-12-31"
+  }
+}
 
 resource "mongodbatlas_cluster" "cluster" {
   project_id = var.project_id
@@ -12,6 +23,7 @@ resource "mongodbatlas_cluster" "cluster" {
       electable_nodes = 3
       priority        = 7
       read_only_nodes = 0
+      analytics_nodes = 1
     }
   }
   cloud_backup                 = false
@@ -20,7 +32,7 @@ resource "mongodbatlas_cluster" "cluster" {
 
   # Provider Settings "block"
   provider_name               = "AWS"
-  provider_instance_size_name = "M10"
+  provider_instance_size_name = "M20"
 
   tags {
     key   = "environment"

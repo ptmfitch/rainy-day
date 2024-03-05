@@ -14,3 +14,5 @@
 terraform.tfstate*
 crash.log
 *.tfout
+
+*.terraform.tfstate*
