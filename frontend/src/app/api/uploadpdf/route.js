@@ -1,26 +1,21 @@
-import { NextResponse, NextRequest } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
-import AWS from 'aws-sdk';
-
-// -------
-
-import { MongoClient } from 'mongodb';
-
-// Connection URL
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
-const client = await MongoClient.connect(MONGODB_URI);
-const coll = client.db('rainyday').collection('statements');
-
-//  -------
+import { NextResponse, NextRequest } from "next/server";
+import { writeFile } from "fs/promises";
+import { join } from "path";
+import AWS from "aws-sdk";
+import { MongoClient } from "mongodb";
 
 export async function POST(req, res) {
-  console.log('got here');
+  // Connection URL
+  const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017";
+  const client = await MongoClient.connect(MONGODB_URI);
+  const coll = client.db("rainyday").collection("statements");
+  console.log("Connected to MongoDB");
+
   try {
     // Access uploaded file
     const file = await req.formData();
     console.log(file);
-    const pdfFile = file.get('file');
+    const pdfFile = file.get("file");
     console.log(pdfFile);
 
     const bytes = await pdfFile.arrayBuffer();
@@ -38,12 +33,15 @@ export async function POST(req, res) {
       Body: buffer,
     };
     await s3.upload(params).promise();
-    console.log('Uploaded to S3');
+    console.log("Uploaded to S3");
 
     const uniqueFilename = `${Date.now()}-${pdfFile.name}`;
 
-    const filename = join('/', 'tmp', uniqueFilename);
-    const fauxname = 'tmp' + '%20' + uniqueFilename;
+    // upload to Mongo
+    await coll.insertOne({ name: uniqueFilename, file: buffer });
+    console.log("Inserted into MongoDB");
+
+    const filename = join("/", "tmp", uniqueFilename);
     console.log(filename);
 
     await writeFile(filename, buffer);
@@ -51,13 +49,14 @@ export async function POST(req, res) {
 
     // Respond with success message
     return NextResponse.json({
-      message: 'File uploaded successfully to MongoDB, and stored locally',
-      localFileName: fauxname,
+      message: "File uploaded successfully to MongoDB, and stored locally",
+      localFileName: uniqueFilename,
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Internal server error' });
+    return NextResponse.json({ error: "Internal server error" });
   } finally {
     await client.close();
+    console.log("MongoDB Connection Closed")
   }
 }
