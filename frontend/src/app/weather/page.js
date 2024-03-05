@@ -17,12 +17,13 @@ async function getWeatherSavings() {
 
 export default async function Weather() {
   const weatherSavingsData = await getWeatherSavings();
-  console.log('Weather Savings Data');
-  console.log(weatherSavingsData);
 
   return (
     <div style={{ height: '50vh', width: '100%' }}>
-      <BarChart title="Spend by Categories" data={weatherSavingsData} />
+      <BarChart
+        title='Rainyday Savings - last 60 days'
+        data={weatherSavingsData}
+      />
     </div>
   );
 }

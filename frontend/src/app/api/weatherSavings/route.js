@@ -6,7 +6,60 @@ async function getWeatherSavings() {
   const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
   const client = await MongoClient.connect(MONGODB_URI);
   const coll = client.db('rainyday').collection('savings_history');
-  const cursor = coll.find().sort({ ts: -1 }).limit(30);
+
+  // date from 60 days ago
+  const date = new Date();
+  date.setDate(date.getDate() - 60);
+
+  const agg = [
+    {
+      $match:
+        /**
+         * query: The query in MQL.
+         */
+        {
+          ts: {
+            $gte: date,
+          },
+        },
+    },
+    {
+      $group:
+        /**
+         * _id: The id of the group.
+         * fieldN: The first field name.
+         */
+        {
+          _id: {
+            $dateTrunc: {
+              date: '$ts',
+              unit: 'week',
+            },
+          },
+          savings: {
+            $sum: '$savings',
+          },
+        },
+    },
+    {
+      $project:
+        /**
+         * specifications: The fields to
+         *   include or exclude.
+         */
+        {
+          ts: '$_id',
+          savings: 1,
+        },
+    },
+    {
+      $sort: {
+        ts: 1,
+      },
+    },
+  ];
+
+  const cursor = coll.aggregate(agg);
   const result = await cursor.toArray();
   await client.close();
 

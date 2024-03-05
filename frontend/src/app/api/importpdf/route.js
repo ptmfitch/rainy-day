@@ -5,20 +5,25 @@ import { ChatOpenAI } from '@langchain/openai';
 // Make PDF binary the input here?
 // blob -> /tmp .pdf right before OpenAI parse?
 
-// PDF parse langchain
-const loader = new PDFLoader("src/documents/bankstatementmar24.pdf");
-const docs = await loader.load();
-// improve this by looping array
-const response_raw = docs[0].pageContent + docs[1].pageContent;
-
 
 export async function GET(req, res) {
+  const searchParams = req.nextUrl.searchParams
+  const query = searchParams.get('query');
+  console.log(query);
+
+    // PDF parse langchain
+  const loader = new PDFLoader(query);
+  // const loader = new PDFLoader("/tmp/bankstatementmar24.pdf");
+  const docs = await loader.load();
+  // improve this by looping array
+  const response_raw = docs[0].pageContent + docs[1].pageContent;
+
   const model = new ChatOpenAI({
     temperature: 0.9,
-    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
-    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
-    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
-    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
+    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY_4_0_VISION,
+    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION_4_0_VISION,
+    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME_4_0_VISION,
+    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME_4_0_VISION,
     maxTokens: 2000,
   });
   const prompt =
