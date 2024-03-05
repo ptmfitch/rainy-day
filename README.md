@@ -181,8 +181,8 @@ Create a new .env.local file in the frontend directory and fill the required con
 
 ```bash
 cd frontend
-cp .env.local.example .end.local
-vi .end.local
+cp .env.local.example .env.local
+vi .env.local
 ```
 
 Make sure the configuration is correct as you might have issues in the next steps if it is not.
