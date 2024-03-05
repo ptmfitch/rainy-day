@@ -6,7 +6,8 @@ import { ChatOpenAI } from '@langchain/openai';
 // blob -> /tmp .pdf right before OpenAI parse?
 
 // PDF parse langchain
-const loader = new PDFLoader("src/documents/bankstatementmar24.pdf");
+// const loader = new PDFLoader("src/documents/bankstatementmar24.pdf");
+const loader = new PDFLoader("/tmp/bankstatementmar24.pdf");
 const docs = await loader.load();
 // improve this by looping array
 const response_raw = docs[0].pageContent + docs[1].pageContent;
