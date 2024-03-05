@@ -9,9 +9,9 @@ dotenv.config({ path: ['.env.local', '.env'] });
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const output_db_name = 'rainyday'
 const client = await MongoClient.connect(MONGODB_URI);
+const db = client.db('rainyday');
 
 /* Create index definitions  by running the below code in the mongo shell
-const db = db.getSiblingDB('rainyday');
 const collections = db.getCollectionNames();
 
 const indexInfo = {};
@@ -39,18 +39,18 @@ collections.forEach(collectionName => {
             });
         });
     }catch(e){
-        print(e);
+        console.log(e);
     }
 
     indexInfo[collectionName] = collectionIndexes;
 });
 
 const jsonString = JSON.stringify(indexInfo, null, 2);
-print(jsonString);
+console.log(jsonString);
 */
 
 
-IndexDefinitions = {
+var indexInfo = {
   "unsplash_images": [
     {
       "name": "_id_",
@@ -599,19 +599,19 @@ try {
         try{
         db[collectionName].createIndex(index.key, { name: index.name });
         } catch(e){
-          print(e);
+          console.log(e);
         }
       } else if (index.searchIndex === 'No') {
         try{
         db[collectionName].createSearchIndex(index.key, { name: index.name });
         } catch(e){
-          print(e);
+          console.log(e);
         }
       }
     });
   }
 
-print("Indexes recreated successfully!");
+console.log("Indexes recreated successfully!");
 } catch (error) {
   console.error('Error: ', error);
 } finally {
