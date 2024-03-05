@@ -1,6 +1,6 @@
 'use client';
 
-import { FileInput, Group, Stack, Text, Loader, Title } from "@mantine/core"
+import { Center, FileInput, Group, Stack, Text, Loader, Title } from "@mantine/core"
 import { useState } from "react"
 import LeafyButton from "../components/LeafyButton";
 import LeafyBadge from "../components/LeafyBadge";
@@ -23,6 +23,14 @@ export default function Pictures() {
   const [insights, setInsights] = useState(null);
   const [clicked, setClicked] = useState(false);
   return (<Stack p="xl">
+    <Stack>
+      <Title>
+        🧠 sAIv with rAIny
+      </Title> 
+      <Text>
+        Upload a photo of your current surroundings for personalised savings insights! 📷
+      </Text>
+    </Stack>
     <FileInput 
       value={file} onChange={setFile}
       w="100%"
@@ -34,14 +42,15 @@ export default function Pictures() {
       uploadFile(file, setInsights)
       setClicked(true)
       setFiles([...files, file])
-    }}>{(clicked && insights === null) ? <Loader c="white" size="sm"/> : "Upload"}</LeafyButton>
+    }}>Upload</LeafyButton>
+    {(insights === null && clicked) && <Center p="xl"><Loader c="white" size="sm"/></Center>}
     {insights !== null && <Stack> 
-      <Group align="flex-start" justify='space-between'>
+      <Stack gap={10}>
         <Title>
           {insights.title}
         </Title> 
         <LeafyBadge color="green" text={insights.category}/>
-      </Group>
+      </Stack>
       <Text>
         {insights.detail}
       </Text>
