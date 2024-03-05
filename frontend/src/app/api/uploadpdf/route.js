@@ -46,6 +46,9 @@ export async function POST(req, res) {
     const fauxname = 'tmp' + '%20' + uniqueFilename;
     console.log(filename);
 
+    await writeFile(filename, buffer);
+    console.log(`Saved to ${filename}`);
+
     // Respond with success message
     return NextResponse.json({
       message: 'File uploaded successfully to MongoDB, and stored locally',
