@@ -84,7 +84,7 @@ async function openai(historicalData) {
     ],
   });
   const prompt =
-    'Based on the historical savings data, predict the savings for the next 30 days from the last data point on a daily basis. You must absolutely reply with only in a VALID JSON format with an array of values with the format ["yyyy-mm-ddThh:mm:ss", savingsAmount]. \n';
+    'Based on the historical savings data, predict the savings for the next 60 days from the last data point on a weekly basis. You must absolutely reply with only in a VALID JSON format with an array of values with the format ["yyyy-mm-ddThh:mm:ss", savingsAmount]. \n';
   const result = await model.invoke(prompt + historicalData);
   console.log('Result');
   console.log(result.content);
