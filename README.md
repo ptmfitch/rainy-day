@@ -152,7 +152,16 @@ Collections
 
 ### Step 1. Run terraform to deploy infrastructure
 
-Create a terraform.tfvars based on the variable.vars definition
+Create a terraform.tfvars based on the variables.tf definition. The file should look like this:
+
+```text
+mongodbatlas_public_key  = "public_key"
+mongodbatlas_private_key = "private_key"
+project_id               = "project_id"
+
+```
+
+IMPORTANT: Login to your AWS account and set the access keys in your current command line prompt.
 
 Run
 
