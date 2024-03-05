@@ -36,7 +36,7 @@ export default function Pictures() {
   const [clicked, setClicked] = useState(false);
   return (
     <Stack p='xl'>
-      <Stack>
+      {insights === null && <><Stack>
         <Title>🧠 sAIv with rAIny</Title>
         <Text>
           Upload a photo of your current surroundings for personalised savings
@@ -66,7 +66,7 @@ export default function Pictures() {
         <Center p='xl'>
           <Loader c='white' size='sm' />
         </Center>
-      )}
+      )}</>}
       {insights !== null && (
         <Stack>
           <Stack gap={10}>
@@ -75,13 +75,16 @@ export default function Pictures() {
           </Stack>
           <Text>{insights.detail}</Text>
           {imageUrl && (
-            <Image
-              radius='xl'
-              alt='insights'
-              width={300}
-              height={300}
-              src={imageUrl}
-            />
+            <Center>
+              <Image
+                radius='xl'
+                alt='insights'
+                width={300}
+                height={300}
+                src={imageUrl}
+              />
+            </Center>
+            
           )}
         </Stack>
       )}
