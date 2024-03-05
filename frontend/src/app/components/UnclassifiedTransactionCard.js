@@ -1,11 +1,11 @@
 'use client';
 
-import { Paper, Stack, Text, Group, Loader } from "@mantine/core";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Paper, Stack, Text, Group, Loader, TextInput } from "@mantine/core";
 import { faCalendar, faClock, faPoundSign } from '@fortawesome/free-solid-svg-icons';
 import { useState } from "react";
 
 import LeafyButton from "./LeafyButton";
+import IconText from "./IconText";
 
 export default function UnclassifiedTransactionCard({ txn }) {
   
@@ -16,42 +16,50 @@ export default function UnclassifiedTransactionCard({ txn }) {
     const res = await fetch('/api/categoriseTransaction?txn_id=' + id, {
       method: 'GET'
     }).then(res => res.json())
-    setClassification(res['category'])
+    if (res['category'] === null) {
+      setClassification('Unclassified')
+    } else {
+      res['category'] = res['category'].replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      setClassification(res['category'])
+    }
   }
 
   const date = txn.ts.split('T')[0];
   const time = txn.ts.split('T')[1].split('.')[0];
   const description = txn.description.replace(/\s+/g, ' ');
   const amount = txn.amount.toFixed(2);
+
   return (<Paper
+    bg="gray.1"
     w="80%"
-    shadow="sm"
     padding="sm"
+    radius="md"
   >
-    <Stack justify='space-around' p="sm">
-      <Text>{description}</Text>
+
+    <Stack justify='space-around' p="sm" h="100%">
+      <Text c="green.7" fw="800" lineClamp={1}>{description}</Text>
       <Group w="100%" justify='space-between'>
-        <Group>
-          <FontAwesomeIcon icon={faCalendar} />
-          <Text>{date}</Text>
-        </Group>
-        <Group>
-          <FontAwesomeIcon icon={faClock} />
-          <Text>{time}</Text>
-        </Group>
-        <Group>
-          <FontAwesomeIcon icon={faPoundSign} />
-          <Text>{amount}</Text>
-        </Group>
+        <IconText icon={faCalendar} text={date} />
+        <IconText icon={faClock} text={time} />
+        <IconText icon={faPoundSign} text={amount} />
       </Group>
+
       {(classification === null && !clicked) && <LeafyButton variant="primary" width="100%" onClick={() => {
         setClicked(true)
         handleClassify(txn._id)
       }}>Classify</LeafyButton>}
-      {(classification === null && clicked) && <LeafyButton variant="primary" width="100%" disabled={true}>
+
+      {(classification === null && clicked) && <LeafyButton variant="primary" width="100%">
         <Loader size="sm" color="white"/>
       </LeafyButton>}
-      {classification !== null && <Text>{classification}</Text>}
+
+      {classification !== null && (<Group justify='space-between' align="flex-end">
+        <TextInput label="Category" value={classification} onChange={(event) => setClassification(event.target.value)} />
+        {<LeafyButton variant="primary" onClick={() => console.log("Confirmed: " + classification)}>
+          Confirm
+        </LeafyButton>}
+      </Group>)}
+
     </Stack>
   </Paper>);
 }

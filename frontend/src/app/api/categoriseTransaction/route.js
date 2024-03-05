@@ -63,8 +63,10 @@ export async function GET(req, res) {
 
   const txn = await txn_collection.findOne({'_id' : txn_id});
 
-  const description = txn['description'];
-  const question = `What is the category for "${description}". If you dont know, give the answer <UNKNOWN> and include the input. Output a raw json document with fields for description, category and reasoning. The description usually has the name of a business and the location. The business name is more important than the location`;
+  const description = txn['description'].replace(/[^a-zA-Z0-9\s]/g, ' ');
+  const ts = txn['ts'];
+  const amount = txn['amount'];
+  const question = `Deeply consider a potential category for a personal transaction with description: "${description}". As a clue, the transaction occurred at "${ts}" and was of value "${amount}". Always output a raw valid json document with structure {"description": <string>, "category": <string|null>, "reasoning": <string>}. The description usually has the name of a business and the location. The business name is more important than the location`;
 
   const retrievedDocs = await retriever.getRelevantDocuments(description);
 
