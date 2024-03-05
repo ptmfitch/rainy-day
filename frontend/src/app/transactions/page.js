@@ -2,6 +2,7 @@
 
 import useSWR from "swr"
 import { Center, Loader, Stack } from "@mantine/core";
+import TransactionAccordion from "../components/TransactionAccordion";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
@@ -25,8 +26,9 @@ export default function Transactions() {
   const { data: transactions, isLoading: transactionsLoading } = useSWR('/api/totalPerCategory', fetcher)
   return (<>
     {transactionsLoading && <Center mt="md"><Loader /></Center>}
-    {transactions && <Stack p="md">{transactions.sort((a, b) => a.total - b.total).reverse().map((transaction) => {
+    {transactions && <Stack p="md">{transactions.filter(a => a._id != null).sort((a, b) => a.total - b.total).reverse().map((transaction) => {
       return (<div key={transaction._id}>{cleanCategoryName(transaction._id)} - £{transaction.total}</div>)
     })}</Stack>}
+    <TransactionAccordion />
   </>)
 }

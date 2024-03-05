@@ -2,13 +2,10 @@
 
 import LineChart from '../components/Charts/LineChart';
 import PieChart from '../components/Charts/PieChart';
-import { ReactECharts } from '../components/Charts/ReactECharts';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Center, Group, Loader, Paper, Stack, Text, SegmentedControl, Accordion, Space } from '@mantine/core';
-import UnclassifiedTransactionCard from '../components/UnclassifiedTransactionCard';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolderTree } from '@fortawesome/free-solid-svg-icons';
+import { Center, Loader, Paper, Stack, Text, SegmentedControl, Space } from '@mantine/core';
+import TransactionAccordion from '../components/TransactionAccordion';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -27,11 +24,6 @@ export default function Categories() {
   //   '/api/createChart',
   //   fetcher
   // );
-
-  const { data: uncatTxns, isLoading: uncatTxnsLoading } = useSWR(
-    '/api/getUncategorisedTransactions',
-    fetcher
-  )
 
   const test = {
     title: {
@@ -106,20 +98,5 @@ export default function Categories() {
       ]}
     />    
   </Stack>
-
-  <Space h="20" />
-
-  <Accordion>
-      <Accordion.Item key={"unclassified"} value={"Unclassified Transactions"}>
-        <Accordion.Control icon={<FontAwesomeIcon icon={faFolderTree}/>}>Unclassified Transactions</Accordion.Control>
-        <Accordion.Panel>
-          {uncatTxnsLoading && <Group justify='center'><Loader /></Group>}
-          {Array.isArray(uncatTxns) && uncatTxns.map((txn, index) => <>
-            <UnclassifiedTransactionCard key={index} txn={txn}/>
-          </>)}
-        </Accordion.Panel>
-      </Accordion.Item>
-      
-    </Accordion>
   </>);
 }
