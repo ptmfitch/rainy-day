@@ -6,14 +6,6 @@ import { join } from 'path';
 
 import { MongoClient } from 'mongodb';
 
- // Connection URL
- const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
- const client = await MongoClient.connect(MONGODB_URI);
- const coll = client.db('rainyday').collection('statements');
-
-
-//  -------
-
 export async function POST(req, res) {
     console.log('got here');
     try {
@@ -27,6 +19,11 @@ export async function POST(req, res) {
         const buffer = Buffer.from(bytes);
 
         const uniqueFilename = `${Date.now()}-${pdfFile.name}`;
+
+         // Connection URL
+        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+        const client = await MongoClient.connect(MONGODB_URI);
+        const coll = client.db('rainyday').collection('statements');
 
         // upload to Mongo
         await coll.insertOne({'name':uniqueFilename, 'file':buffer});
