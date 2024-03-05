@@ -51,7 +51,7 @@ export default function Home() {
 
         <Text size="xl">🏦 Connected accounts</Text> 
         <Group w="100%" justify="flex-start">
-          <Button h="100" w="110" radius="xl" size="xl" color="green.1">
+          <Button onClick={() => router.push('/transactions')} h="100" w="110" radius="xl" size="xl" color="green.1">
             <Stack align="center" gap="0">
               <Image alt="Monzo" height="30" width="30" src="monzo-icon.svg"/>
               <Text c="black" size="sm">Monzo</Text>
@@ -73,12 +73,6 @@ export default function Home() {
 
         <Text size="xl">📄 AI statement insights</Text> 
         <Group w="100%" justify="flex-start">
-          <Button h="100" w="120" radius="xl" size="xl" color="green.1">
-            <Stack align="center" gap="0">
-              <Image alt="Monzo" height="30" width="30" src="monzo-icon.svg"/>
-              <Text c="black">Monzo</Text>
-            </Stack>
-          </Button>
           <Button h="100" w="120" radius="xl" color="green.4" onClick={open}>
             <Stack align="center" gap="3">
             <FontAwesomeIcon color={theme.colors.gray[6]} size="2x" icon={faPlus}/>
