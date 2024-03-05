@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { ChatOpenAI } from '@langchain/openai';
 
+// Make PDF binary the input here?
+// blob -> /tmp .pdf right before OpenAI parse?
+
 // PDF parse langchain
 const loader = new PDFLoader("src/documents/bankstatementmar24.pdf");
 const docs = await loader.load();
