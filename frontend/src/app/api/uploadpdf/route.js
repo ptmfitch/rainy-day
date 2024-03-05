@@ -42,20 +42,14 @@ export async function POST(req, res) {
 
     const uniqueFilename = `${Date.now()}-${pdfFile.name}`;
 
-    // upload to Mongo
-    await coll.insertOne({ name: uniqueFilename, file: buffer });
-    console.log('Inserted into MongoDB');
-
     const filename = join('/', 'tmp', uniqueFilename);
+    const fauxname = 'tmp' + '%20' + uniqueFilename;
     console.log(filename);
-
-    await writeFile(filename, buffer);
-    console.log(`Saved to ${filename}`);
 
     // Respond with success message
     return NextResponse.json({
       message: 'File uploaded successfully to MongoDB, and stored locally',
-      localFileName: filename,
+      localFileName: fauxname,
     });
   } catch (error) {
     console.error(error);
