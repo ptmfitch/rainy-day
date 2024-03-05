@@ -11,6 +11,8 @@
     "savings-history": "node ./data/savings_history.mjs",
     "transaction_embeddings": "node ./data/create_embeddings.mjs",
     "create_category_by_description": "node ./data/create_category_by_description.mjs",
+    "create_transactions": "node ./data/create_transactions.mjs",
+    "seed_data": "node ./data/create_transactions.mjs && node ./data/create_embeddings.mjs && node ./data/create_category_by_description.mjs && node ./data/savings_history.mjs && node ./data/total_savings.mjs && node ./data/seed.mjs",
     "lint": "next lint"
   },
   "dependencies": {
@@ -24,9 +26,11 @@
     "@mantine/core": "^7.6.1",
     "@mantine/hooks": "^7.6.1",
     "aws-sdk": "^2.1570.0",
+    "adm-zip": "^0.5.10",
     "datejs": "^1.0.0-rc3",
     "dotenv": "^16.4.5",
     "echarts": "^5.5.0",
+    "ejson": "^2.2.3",
     "embla-carousel-react": "^7.1.0",
     "langchain": "^0.1.25",
     "mongodb": "^6.4.0",
