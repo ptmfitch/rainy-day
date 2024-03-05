@@ -3,10 +3,12 @@ import { StringOutputParser } from '@langchain/core/output_parsers';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { MongoClient } from 'mongodb';
 import { MongoDBAtlasVectorSearch } from '@langchain/mongodb';
-
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 
 export async function GET(req, res) {
+  const searchParams = req.nextUrl.searchParams;
+  const question = searchParams.get('question');
+
   const embeddings = new OpenAIEmbeddings({
     azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
     azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
@@ -28,7 +30,7 @@ export async function GET(req, res) {
   });
 
   // Retrieve and generate using the relevant snippets of the blog.
-  const retriever = vectorStore.asRetriever();
+  const retriever = vectorStore.asRetriever(30);
   //const prompt = (await pull) < ChatPromptTemplate > 'rlm/rag-prompt';
 
   // If a template is passed in, the input variables are inferred automatically from the template.
@@ -36,13 +38,13 @@ export async function GET(req, res) {
     `
     You are a helpful senior software developer. You only reply with a valid JSON formatted output.
     You only reply with a valid JSON formatted output. Do not add any additional information.
-    Create an Apache ECharts chart based on this inputs:
-  {question}
-  Based on this context:
+    Create an Apache ECharts chart based on these inputs:
+    Question:
+    {question}
+  Context:
   {context}`
   );
 
-  console.log(prompt);
   const llm = new ChatOpenAI({
     azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
     azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
@@ -51,34 +53,26 @@ export async function GET(req, res) {
     temperature: 0,
   });
 
+  let retrievedDocs = await retriever.getRelevantDocuments(question);
+  retrievedDocs.map((doc) => {
+    doc.pageContent = JSON.stringify(doc.metadata);
+  });
+
   const ragChain = await createStuffDocumentsChain({
     llm,
     prompt,
     outputParser: new StringOutputParser(),
+    verbose: true,
   });
-
-  const question = `
-  How much money have I spent on coffee this month on a daily basis?
-  `;
-
-  const retrievedDocs = await retriever.getRelevantDocuments(question, {
-    limit: 100,
-  });
-  console.log('retrievedDocs');
-  console.log(retrievedDocs);
 
   let chart = await ragChain.invoke({
     question,
     context: retrievedDocs,
+    verbose: true,
   });
-
-  console.log(chart);
 
   try {
     chart = JSON.parse(chart);
-
-    console.log('chart');
-    console.log(chart);
 
     return Response.json(chart);
   } catch (error) {
