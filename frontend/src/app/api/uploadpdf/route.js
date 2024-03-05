@@ -33,13 +33,14 @@ export async function POST(req, res) {
         console.log("Inserted into MongoDB");
 
         const filename = join('/', 'tmp', uniqueFilename);
+        const fauxname = 'tmp' + '%20' + uniqueFilename;
         console.log(filename);
 
         await writeFile(filename, buffer);
         console.log(`Saved to ${filename}`);
 
         // Respond with success message
-        return NextResponse.json({ message: 'File uploaded successfully to MongoDB, and stored locally', localFileName: filename });
+        return NextResponse.json({ message: 'File uploaded successfully to MongoDB, and stored locally', localFileName: fauxname });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal server error' });

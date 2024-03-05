@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Group, Stack, Text, Title, Modal, FileInput, useMantineTheme, Spoiler } from "@mantine/core";
-import { faBank, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBank, faFile, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MantineCarousel from "./components/MantineCarousel";
 import { useDisclosure } from '@mantine/hooks';
@@ -11,14 +11,15 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 
-async function uploadFile(file) {
+async function uploadFile(file, setNav) {
   const data = new FormData()
   data.set('file', file)
   const res = await fetch('/api/uploadpdf', {
     method: 'POST',
     body: data
-  })
-  if (!res.ok) throw new Error(await res.text())
+  }).then(res => res.json())
+  setNav(res.localFileName)
+  // if (!res.ok) throw new Error(await res.text())
 }
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
@@ -27,6 +28,7 @@ export default function Home() {
   const [opened, { open, close }] = useDisclosure(false);
   const [file, setFile] = useState(null);
   const [files, setFiles] = useState([]);
+  const [nav, setNav] = useState(null);
 
   const { data: spendData, isLoading } = useSWR('/api/spendComparison', fetcher)
 
@@ -41,7 +43,7 @@ export default function Home() {
       <Stack align="flex-start" pt="sm" pb="sm" pl="xl" pr="xl" gap="1rem">
         <Title>Hello, James! 👋</Title>
 
-        {isLoading && <Text size="xl">rAInyday is thinking... 🧠</Text>}
+        {isLoading && <Text size="xl">rAIny is thinking... 🧠</Text>}
         {Array.isArray(spendData) && <Spoiler maxHeight={120} showLabel="Show more" hideLabel="Hide">
           <Text size="lg">{spendData[0].insight}</Text>
           <Text size="lg">{spendData[0].detail}</Text>
@@ -73,7 +75,22 @@ export default function Home() {
 
         <Text size="xl">📄 AI statement insights</Text> 
         <Group w="100%" justify="flex-start">
-          <Button h="100" w="120" radius="xl" color="green.4" onClick={open}>
+          {files.map(file => 
+            <Button key={file} h="100" w="110" radius="xl" color="green.1"
+              onClick={() => {
+                console.log("got here")
+                console.log(file)
+                console.log(nav)
+                router.push(`/transactions/${nav}`)}
+              }
+            >
+              <Stack align="center" gap="3">
+              <FontAwesomeIcon color={theme.colors.gray[6]} size="2x" icon={faFile}/>
+              <Text c="black">New</Text>
+              </Stack>
+            </Button>
+          )}
+          <Button h="100" w="110" radius="xl" color="green.4" onClick={open}>
             <Stack align="center" gap="3">
             <FontAwesomeIcon color={theme.colors.gray[6]} size="2x" icon={faPlus}/>
             <Text c="black">PDF</Text>
@@ -94,7 +111,7 @@ export default function Home() {
           placeholder="No file selected"
         />
         <LeafyButton variant="primary" width="100%" onClick={() => {
-          uploadFile(file)
+          uploadFile(file, setNav)
           setFiles([...files, file])
           close()
         }}>Upload</LeafyButton>
