@@ -15,6 +15,10 @@ export async function GET(request) {
     console.log("Retrieved from MongoDB");
     console.log(response);
     await client.close();
+
+   // Response _id, filename, PDF blob
+   // handle the blob -> /tmp .pdf for OpenAI parse in this route?
+
     return NextResponse.json(response);
 
  }
