@@ -12,18 +12,25 @@ rAInyday is an AI powered personal finance app. Hook it up to all your transacti
 # Justification
 
 _Please explain why you decided to build the application/demonstration for this project. What inspired you? What problems does it solve or how will it make Presales activities easier?_
-Personal finance is a topic that everyone can relate to and there are bunch of apps out there with various functionalities. The app demonstrates a mix of both solid and creative problem solving and activities that the MongoDB DDP platform can help enable.
+
+Personal finance is a topic that everyone can relate to and there are a bunch of apps out there with various functionalities. 
+
+The app we've built demonstrates a mix of both solid and creative problem solving / activities that the MongoDB DDP platform can help enable.
 
 _What MongoDB competitive differentiators (developer productivity, resiliency, scalability, etc.) does this demonstration showcase?_
-The app demonstrates the flexibility of being able to store and manipulate different data sets, augmenting them with AI powered decisions and insights. 5 people worked for 36hrs on the hack and not once did the database get in the way.
+
+The app demonstrates the flexibility of being able to store and manipulate different data sets, augmenting them with AI powered decisions and insights. 
+
+5 people worked for 48hrs on the hack and not once did the platform get in the way.
 
 # Detailed Application Overview
 
-_Describe the architecture of your application and include a diagram._
+![Getting Started](./img/architecture.png)
 
-Data Sets
+## Data Sets
+
 The app uses 4 main data sets
-* personal transaction data. This is real data sourced from one team members Monzo integation ( also running in Atlas ) gathered over the last 5 years and used with permission.
+* personal transaction data. This is real data sourced from one team members Monzo integation (also running in Atlas) gathered over the last 5 years and used with permission.
 * Weather data - this comes from OpenMeteo
 * PDF Statement data. This was faked for the hack
 * Unsplash. This was used to generate images for test
@@ -38,24 +45,71 @@ _List all the MongoDB components/products used in your demonstration._
 * Search. Powers the search bar on every page
 
 _Describe what you application does and how it works_
-* There is a history of transactions in the database that have been categoried according to their description, but there is logic built on OpenAI to use RAG to query an LLM to categorise transactions with missing categories
+* There is a history of transactions in the database that have been categoried according to their description, but there is logic built to use RAG to query an LLM to categorise transactions with missing categories
 * Weather data is periodically fetched from OpenMeteo using a scheduled Atlas trigger
 
-The app is made of of 6 screens
+User Stories
 
-* The home page shows a list of accounts and stories about the top 3 categories of transcations. The story images and tag lines are AI generated using Unsplash
+**Story 1 - Home**
 
-* The category screen uses aggregations to display charts of transaction / categry activity. Uncategorised transactions are shown at the bottom. Hitting the button makes a call into OpenAI to discern a category for the transaction which you can accept.
+* The home page shows a headline about the user’s spending/saving habits, along with a visual representation of this habit
+    - The headline is provided by the LLM, along with a keyword that is then used to get a picture from Unsplash
+    - The user can then click on the “Read more” button to see the reason behind it
+* Below that, the user has access to see their connected accounts as we’ll as uploading PDF statements
 
-There is a box on this screen so that you can enter free text to generate your custom chart. This uses AI to drive Apache eCharts
+**Story 2 - Statment upload**
 
-* The weather page shows the weather patterns for the last week and will prompt you to save on a rainy day! The text box at the bottom uses AI to let you know how much you saved in interesting units
+* PDF import. 
+- From the home screen, the user can upload a legacy/exported/scanned bank statement and get automatic import and categorisation via LLM
+- A new screen will then appear with the list of transactions that were detected by the LLM
 
-* PDF import. This screen allows for the import of a PDF. The PDF is then imported into the database.
+**Story 3 - Categories Charts**
 
-* Category Analysis screen
+* In the Categories screen, the user can see 2 predefined charts:
+    - One that tracks their total spend over time
+    - Another one that shows the total spend percentage in each category
+        - These use MongoDB aggregations that queries an Analytical Node to not impact the operational workload
 
-* ImageSaver screen. Upload an image and AI will suggest ways of saving money based on the image!
+**Story 4 - Custom Charts**
+
+* Besides the 2 predefined charts, the user can ask rAIny to create an on demand chart
+    - This uses the LLM to create a valid ECharts JSON specification to display the required data.
+    - The LLM is provided with context from the Atlas Vector Search using RAG
+        -  The transactions stored in MongoDB are the actual context and not a text version
+
+**Story 5 - Spending By Category**
+
+* This shows the aggregated spending by category for all time
+* LLM provides the classification for the data using Atlas Vector Search
+* For any that are currently unclassified, the user can click and the app uses a RAG prompt to ask the LLM to classify the transact
+
+* The weather page shows the weather patterns for the last week and will automatically saved based on the weather data
+The Rainyday savings screen shows you how much money you saved over the last 60 days on a weekly basis
+Using the precipitation data from the weather feed, we save the user £1 per mm of rainfall
+We use LLM to forecast the next 30 days based on the data context coming from Atlas Vector Search on the weather data
+
+**Story 6 - Rainyday savings**
+
+* The Rainyday savings  shows you how much money you saved over the last 60 days on a weekly basis
+    - Using the precipitation data from the weather feed, we save the user £1 per mm of rainfall
+    - We use LLM to forecast the next 30 days based on the data context coming from Atlas Vector Search on the weather data
+
+**Story 7 - Pictures**
+
+* In the Pictures screen the user uploads a photo of their current situation.  The rainyday saving app will ask GPT4 (vision) to use the image as context and suggest how the user can save money
+* In the example the vision api has understood the price of each bag of sand and suggests choosing the cheaper bag of sand
+* The AI will keep things light by returning an amusing summary if appropriate
+
+**Story 8 - Search**
+
+* The search bar is available in all screens
+* The user can search for any transaction
+* There is an Atlas Search autocomplete index on 3 fields:
+    -  description
+    - category
+    - amount
+* The user can then click on a result and see the transaction details in a new screen
+
 
 # Database Structure
 
@@ -101,10 +155,8 @@ This runs all the scripts in the data directory
 * seed.mjs
 
 _The demonstration script should provide all the information required for another MongoDB SA to deliver your demonstration to a prospect. This should include:_
-
-* 
-* _step by step instructions on how to give the demonstration_
-* _key points to emphasize at each point in the demonstration_
+_step by step instructions on how to give the demonstration_
+_key points to emphasize at each point in the demonstration_
 * Re-running the seed_data script will reset the database back to the default state
 
 
