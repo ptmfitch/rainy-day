@@ -5,9 +5,10 @@ import PieChart from '../components/Charts/PieChart';
 import { ReactECharts } from '../components/Charts/ReactECharts';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Center, Loader, Group, Paper, Stack, Space, Text } from '@mantine/core';
-import LeafyButton from '../components/LeafyButton';
+import { Center, Group, Loader, Paper, Stack, Text, SegmentedControl, Accordion, Space } from '@mantine/core';
 import UnclassifiedTransactionCard from '../components/UnclassifiedTransactionCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolderTree } from '@fortawesome/free-solid-svg-icons';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -71,7 +72,8 @@ export default function Categories() {
     ],
   };
 
-  return (<Stack gap="lg" align="center">
+  return (<>
+  <Stack gap="lg" align="center">
     {lineChartLoading && <Paper 
       bg="gray.1"
       h='50vh' w="100%"
@@ -92,31 +94,32 @@ export default function Categories() {
       )}
       {/* <ReactECharts option={createChartData} theme='light' /> */}
     </div>}
-    <Group justify='center'>
-      <LeafyButton
-        variant='primary'
-        onClick={() => setActiveChart('line')}
-        disabled={activeChart === 'line'}
-      >
-        Total Spend
-      </LeafyButton>
-      <LeafyButton
-        variant='primary'
-        onClick={() => setActiveChart('pie')}
-        disabled={activeChart === 'pie'}
-      >
-        Spend by Categories
-      </LeafyButton>
-    </Group>
 
-    <Space h="20" />
+    <SegmentedControl 
+      fullWidth={true}
+      color="green.7"
+      value={activeChart}
+      onChange={setActiveChart}
+      data={[
+        { value: 'line', label: 'Total Spend' },
+        { value: 'pie', label: 'Spend by Categories' },
+      ]}
+    />    
+  </Stack>
 
-    <Text size="xl">
-      Uncategorised Transactions
-    </Text>
-    {uncatTxnsLoading && <Loader />}
-    {Array.isArray(uncatTxns) && uncatTxns.map((txn, index) => 
-      <UnclassifiedTransactionCard key={index} txn={txn}/>
-    )}
-  </Stack>);
+  <Space h="20" />
+
+  <Accordion>
+      <Accordion.Item key={"unclassified"} value={"Unclassified Transactions"}>
+        <Accordion.Control icon={<FontAwesomeIcon icon={faFolderTree}/>}>Unclassified Transactions</Accordion.Control>
+        <Accordion.Panel>
+          {uncatTxnsLoading && <Group justify='center'><Loader /></Group>}
+          {Array.isArray(uncatTxns) && uncatTxns.map((txn, index) => <>
+            <UnclassifiedTransactionCard key={index} txn={txn}/>
+          </>)}
+        </Accordion.Panel>
+      </Accordion.Item>
+      
+    </Accordion>
+  </>);
 }

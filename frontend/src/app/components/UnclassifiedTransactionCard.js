@@ -31,12 +31,11 @@ export default function UnclassifiedTransactionCard({ txn }) {
 
   return (<Paper
     bg="gray.1"
-    w="80%"
-    padding="sm"
+    w="100%"
+    mb="xs"
     radius="md"
   >
-
-    <Stack justify='space-around' p="sm" h="100%">
+    <Stack justify='space-around' p="sm">
       <Text c="green.7" fw="800" lineClamp={1}>{description}</Text>
       <Group w="100%" justify='space-between'>
         <IconText icon={faCalendar} text={date} />
