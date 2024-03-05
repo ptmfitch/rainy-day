@@ -20,10 +20,10 @@ export async function GET(req, res) {
 
   const model = new ChatOpenAI({
     temperature: 0.9,
-    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
-    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
-    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
-    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
+    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY_4_0_VISION,
+    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION_4_0_VISION,
+    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME_4_0_VISION,
+    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME_4_0_VISION,
     maxTokens: 2000,
   });
   const prompt =

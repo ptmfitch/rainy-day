@@ -4,13 +4,18 @@ import LineChart from '../components/Charts/LineChart';
 import PieChart from '../components/Charts/PieChart';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Center, Loader, Paper, Stack, Text, SegmentedControl, Space } from '@mantine/core';
-import TransactionAccordion from '../components/TransactionAccordion';
+import { Center, Group, Loader, Paper, Stack, Text, SegmentedControl, Space, TextInput } from '@mantine/core';
+import { ReactECharts } from '../components/Charts/ReactECharts';
+import LeafyButton from '../components/LeafyButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRefresh, faX } from '@fortawesome/free-solid-svg-icons';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Categories() {
   const [activeChart, setActiveChart] = useState('line');
+  const [tempQuestion, setTempQuestion] = useState('Create a bar chart showing my spend on coffee');
+  const [question, setQuestion] = useState(tempQuestion);
 
   const { data: lineChartData, isLoading: lineChartLoading } = useSWR(
     '/api/spendChart',
@@ -20,10 +25,11 @@ export default function Categories() {
     '/api/totalPerCategory',
     fetcher
   );
-  // const { data: createChartData, isLoading: createChartLoading } = useSWR(
-  //   '/api/createChart',
-  //   fetcher
-  // );
+
+  const { data: createChartData, isLoading: createChartLoading, mutate } = useSWR(
+    `/api/createChart?question=${question}`,
+    fetcher
+  );
 
   const test = {
     title: {
@@ -66,9 +72,9 @@ export default function Categories() {
 
   return (<>
   <Stack gap="lg" align="center">
-    {lineChartLoading && <Paper 
+    {(lineChartLoading || (activeChart === 'ai' && createChartLoading)) && <Paper 
       bg="gray.1"
-      h='50vh' w="100%"
+      h='75vh' w="100%"
     >
       <Center h="100%" w="100%">
         <Stack align="center">
@@ -77,14 +83,16 @@ export default function Categories() {
         </Stack>
       </Center>
     </Paper>}
-    {lineChartData && <div style={{ height: '50vh', width: '100%' }}>
+    {!lineChartLoading && <div style={{ height: '75vh', width: '100%' }}>
       {activeChart === 'line' && (
         <LineChart title='Total Spend' data={lineChartData} />
       )}
-      {activeChart === 'pie' && (
+      {(activeChart === 'pie' && !pieChartLoading) && (
         <PieChart title='Spend by Categories' data={pieChartData} />
       )}
-      {/* <ReactECharts option={createChartData} theme='light' /> */}
+      {(activeChart === 'ai' && !createChartLoading) && (
+        <ReactECharts option={createChartData} theme='light' />
+      )}
     </div>}
 
     <SegmentedControl 
@@ -95,8 +103,23 @@ export default function Categories() {
       data={[
         { value: 'line', label: 'Total Spend' },
         { value: 'pie', label: 'Spend by Categories' },
+        { value: 'ai', label: 'Ask rAINy'}
       ]}
     />    
+
+    {activeChart === 'ai' && <Group pl="xl" pr="xl" w="100%" justify="space-between">
+      <TextInput 
+        w="60%"
+        value={tempQuestion}
+        onChange={(event) => setTempQuestion(event.target.value)}
+      />
+      <LeafyButton onClick={() => setQuestion(tempQuestion)} variant="primary">
+        <FontAwesomeIcon icon={faRefresh}/>
+      </LeafyButton>
+      <LeafyButton onClick={() => setTempQuestion('')} variant="danger">
+        <FontAwesomeIcon icon={faX}/>
+      </LeafyButton>
+    </Group>}
   </Stack>
   </>);
 }
