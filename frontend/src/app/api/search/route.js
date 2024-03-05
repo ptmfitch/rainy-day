@@ -17,7 +17,7 @@ async function search(query) {
       },
     },
     { $limit: 3 },
-    { $project: { _id: 0, description: 1, amount: 1, category: 1 } },
+    { $project: { _id: 1, description: 1, amount: 1, category: 1 } },
   ];
   // run pipeline
   let cursor = coll.aggregate(agg);
@@ -34,7 +34,7 @@ async function search(query) {
       },
     },
     { $limit: 3 },
-    { $project: { _id: 0, description: 1, amount: 1, category: 1 } },
+    { $project: { _id: 1, description: 1, amount: 1, category: 1 } },
   ];
   // run pipeline
   cursor = coll.aggregate(agg);
@@ -51,7 +51,7 @@ async function search(query) {
       },
     },
     { $limit: 3 },
-    { $project: { _id: 0, description: 1, amount: 1, category: 1 } },
+    { $project: { _id: 1, description: 1, amount: 1, category: 1 } },
   ];
   // run pipeline
   cursor = coll.aggregate(agg);
@@ -69,6 +69,16 @@ export async function GET(req, res) {
     const searchParams = req.nextUrl.searchParams;
     const query = searchParams.get('query');
     console.log(query);
+
+    if (query.length < 3) {
+      return Response.json([
+        {
+          description: 'Please enter at least 3 characters to search',
+          amount: '',
+          category: '',
+        },
+      ]);
+    }
 
     const result = await search(query);
     console.log('Result:', result);
