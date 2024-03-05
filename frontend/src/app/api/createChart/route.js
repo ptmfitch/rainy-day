@@ -50,7 +50,7 @@ export async function GET(req, res) {
     azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
     azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
     azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
-    temperature: 0,
+    temperature: 0
   });
 
   let retrievedDocs = await retriever.getRelevantDocuments(question);

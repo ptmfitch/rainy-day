@@ -11,6 +11,7 @@ export default function UnclassifiedTransactionCard({ txn }) {
   
   const [classification, setClassification] = useState(null);
   const [clicked, setClicked] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   async function handleClassify(id) {
     const res = await fetch('/api/categoriseTransaction?txn_id=' + id, {
@@ -55,7 +56,9 @@ export default function UnclassifiedTransactionCard({ txn }) {
       {classification !== null && (<Group justify='space-between' align="flex-end">
         <TextInput label="Category" value={classification} onChange={(event) => setClassification(event.target.value)} />
         {/*TODO: on confirm, pop up with a modal that vector searches similar txns, offering to classify them*/}
-        {<LeafyButton variant="primary" onClick={() => console.log("Confirmed: " + classification)}>
+        {<LeafyButton variant="primary" onClick={
+          () => console.log("Confirmed: " + classification)
+        }>
           Confirm
         </LeafyButton>}
       </Group>)}
