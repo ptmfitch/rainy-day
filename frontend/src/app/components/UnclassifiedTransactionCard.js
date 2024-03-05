@@ -56,8 +56,8 @@ export default function UnclassifiedTransactionCard({ txn }) {
       {classification !== null && (<Group justify='space-between' align="flex-end">
         <TextInput label="Category" value={classification} onChange={(event) => setClassification(event.target.value)} />
         {/*TODO: on confirm, pop up with a modal that vector searches similar txns, offering to classify them*/}
-        {<LeafyButton variant="primary" onClick={
-          () => console.log("Confirmed: " + classification)
+        {<LeafyButton variant="primary" disabled={!confirmed} onClick={
+          () => setConfirmed(true)
         }>
           Confirm
         </LeafyButton>}

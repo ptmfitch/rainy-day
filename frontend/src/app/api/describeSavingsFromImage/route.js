@@ -81,10 +81,10 @@ export async function POST(req, res) {
     const GPT4V_ENDPOINT = `https://${process.env.AZURE_OPENAI_API_INSTANCE_NAME_4_0_VISION}.openai.azure.com/openai/deployments/${process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME_4_0_VISION}/chat/completions?api-version=${process.env.AZURE_OPENAI_API_VERSION_4_0_VISION}`;  
       
     // Send request  
-    axios.post(GPT4V_ENDPOINT, payload, { headers: headers })  
+    const res = await axios.post(GPT4V_ENDPOINT, payload, { headers: headers })  
       .then(response => {  
         console.log((response.data.choices[0].message.content));  
-        return NextResponse.json(response.data.choices[0].message.content);
+        return response.data.choices[0].message.content;
       })  
       .catch(error => {  
         console.error(`Failed to make the request. Error: ${error}`);  
@@ -92,7 +92,7 @@ export async function POST(req, res) {
 
 
     // Respond with success message
-    return NextResponse.json({ message: 'File uploaded failed successfully' });
+    return NextResponse.json(JSON.parse(res));
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Internal server error' });
