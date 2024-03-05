@@ -1,27 +1,13 @@
 'use client';
 
 import useSWR from "swr"
-import { Center, Loader } from "@mantine/core";
+import { Center, Loader, Paper, Stack, Group, Text } from "@mantine/core";
 import { useState } from "react";
 import LeafyButton from "@/app/components/LeafyButton";
+import IconText from "@/app/components/IconText";
+import { faAudioDescription, faBalanceScale, faBook, faBrain, faCalendar, faComputer, faPoundSign, faRobot, faSignOut, faSort } from "@fortawesome/free-solid-svg-icons";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
-
-function replaceUnderscoresWithSpaces(s) {
-  return s.replace(/_/g, ' ')
-}
-
-function capitaliseFirstLetter(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
-function cleanCategoryName(s) {
-  if (s) {
-    return capitaliseFirstLetter(replaceUnderscoresWithSpaces(s))
-  } else {
-    return "Uncategorised"
-  }
-}
 
 const test_data = [
   {
@@ -47,11 +33,38 @@ export default function Transactions({params}) {
   console.log('pdfFilename:', pdfFilename)
   const { data: transactions, isLoading: transactionsLoading } = useSWR(`/api/importpdf?query=${pdfFilename}`, fetcher)
   const [clicked, setClicked] = useState(false)
+
   return (<>
     {transactionsLoading && <Center mt="md">
       <LeafyButton onClick={() => setClicked(true)}>
-        {clicked ? <Loader /> : "Analyse PDF"}
+        {clicked ? <Loader size="sm" color="white"/> : "Analyse PDF"}
       </LeafyButton>
     </Center>}
+    {Array.isArray(transactions) && transactions.map((transaction, index) => {
+      return (
+        <Paper
+          key={index}
+          bg="gray.1"
+          w="100%"
+          mb="xs"
+          radius="md"
+        >
+          <Stack justify='space-around' p="sm">
+            <Group w="100%" justify='space-between'>
+              <Text c="green.7" fw="800" lineClamp={1}>{`Transaction ${index + 1}`}</Text>
+              <IconText icon={faRobot} text={transaction.category}/>
+            </Group>
+
+            <Group><IconText icon={faBook} text={transaction.detail} /></Group>
+            
+            <Group w="100%" justify='space-between'>
+              
+              <IconText icon={faCalendar} text={transaction.date} />
+              <IconText icon={faPoundSign} text={transaction.paidOut} />
+            </Group>
+          </Stack>
+        </Paper>
+      )
+    })}
   </>)
 }
