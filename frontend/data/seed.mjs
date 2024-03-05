@@ -14,6 +14,13 @@ const oneYearAgo = new Date(
 
 const url = `https://archive-api.open-meteo.com/v1/archive?latitude=52.52&longitude=13.41&start_date=${oneYearAgo}&end_date=${today}&daily=precipitation_sum,precipitation_hours&timezone=Europe%2FLondon`;
 
+// Connection URL
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+// Database Name
+const dbName = 'rainyday';
+// Create a new MongoClient
+const client = new MongoClient(MONGODB_URI);
+
 try {
   //fetch data
   const response = await fetch(url);
@@ -21,12 +28,6 @@ try {
 
   console.log(JSON.stringify(data));
 
-  // Connection URL
-  const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
-  // Database Name
-  const dbName = 'rainyday';
-  // Create a new MongoClient
-  const client = new MongoClient(MONGODB_URI);
 
   // Use connect method to connect to the Server
   await client.connect();

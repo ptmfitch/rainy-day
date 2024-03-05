@@ -47,6 +47,7 @@ try {
   const transactions_collection = client.db('rainyday').collection('transactions');
   await transactions_collection.aggregate(pipeline).toArray();
 
+  console.log("Created category_by_description, creating embeddings")
   // iterate over the collection and create embeddings
   const cursor = category_collection.find({});
 

@@ -20,6 +20,23 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+### MongoDB Installation
+
+Install the Atlas environment using the terraform script
+
+To seed all the data, run
+
+    npm run seed_data
+
+This runs all the scripts in the data directory
+
+* create_transactions.mjs
+* create_embeddings.mjs
+* create_category_by_description.mjs
+* savings_history.mjs
+* total_savings.mjs
+* seed.mjs
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
