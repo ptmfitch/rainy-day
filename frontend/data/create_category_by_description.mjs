@@ -5,7 +5,8 @@ import { OpenAIEmbeddings } from '@langchain/openai';
 dotenv.config({ path: ['.env.local', '.env'] });
 
 // Connection URL
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+const MONGODB_URI =
+  process.env.MONGODB_URI_ANALYTICS || 'mongodb://localhost:27017';
 const client = await MongoClient.connect(MONGODB_URI);
 
 try {
@@ -25,26 +26,29 @@ try {
   var pipeline = [
     {
       $group: {
-        _id: "$description",
+        _id: '$description',
         category: {
-          $first: "$category"
+          $first: '$category',
         },
         cnt: {
-          $sum: 1
-        }
-      }
+          $sum: 1,
+        },
+      },
     },
     {
-      $merge:
-        {
-          into: "category_by_description"
-        }
-    }
-  ]
+      $merge: {
+        into: 'category_by_description',
+      },
+    },
+  ];
 
-  const category_collection = client.db('rainyday').collection('category_by_description');
+  const category_collection = client
+    .db('rainyday')
+    .collection('category_by_description');
   await category_collection.deleteMany({});
-  const transactions_collection = client.db('rainyday').collection('transactions');
+  const transactions_collection = client
+    .db('rainyday')
+    .collection('transactions');
   await transactions_collection.aggregate(pipeline).toArray();
 
   console.log("Created category_by_description, creating embeddings")
@@ -55,10 +59,10 @@ try {
     const description = doc['_id'];
     const category = doc['category'];
     const embedding = await embeddings.embedQuery(description);
-    const text_key = `The category for '${description}' is '${category}'`
+    const text_key = `The category for '${description}' is '${category}'`;
     await category_collection.updateOne(
       { _id: doc._id },
-      { $set: { text_key : text_key, embedding: embedding } }
+      { $set: { text_key: text_key, embedding: embedding } }
     );
   }
 } catch (error) {

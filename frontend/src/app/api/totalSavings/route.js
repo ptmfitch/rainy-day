@@ -13,7 +13,8 @@ async function getTotalSavings() {
   ];
 
   // Connection URL
-  const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+  const MONGODB_URI =
+    process.env.MONGODB_URI_ANALYTICS || 'mongodb://localhost:27017';
   const client = await MongoClient.connect(MONGODB_URI);
   const coll = client.db('rainyday').collection('savings_history');
   const cursor = coll.aggregate(agg);

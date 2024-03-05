@@ -25,6 +25,7 @@
     "@mantine/carousel": "^7.6.1",
     "@mantine/core": "^7.6.1",
     "@mantine/hooks": "^7.6.1",
+    "aws-sdk": "^2.1570.0",
     "adm-zip": "^0.5.10",
     "datejs": "^1.0.0-rc3",
     "dotenv": "^16.4.5",
